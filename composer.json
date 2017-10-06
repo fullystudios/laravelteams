@@ -1,0 +1,12 @@
+{
+    "name": "fullystudios/laravelteams",
+    "description": "Add users to teams in laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mikael Biström",
+            "email": "mikael.bistrom@fullystudios.se"
+        }
+    ],
+    "require": {}
+}
