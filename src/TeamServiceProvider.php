@@ -13,7 +13,14 @@ class TeamServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        include __DIR__.'/routes.php';
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
+        $this->loadViewsFrom(__DIR__.'/Views', 'laravelteams');
+        $this->publishes([
+           __DIR__.'/Views' => resource_path('views/vendor/laravelteams'),
+       ]);
+
+
     }
 
     /**
