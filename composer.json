@@ -8,5 +8,11 @@
             "email": "mikael.bistrom@fullystudios.se"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": ["tests/utilities/functions.php"]
+    }
 }
