@@ -1,14 +1,8 @@
 <?php
 use Tests\TestCase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Database\Eloquent\Model;
-use Beestreams\LaravelImageable\Models\Image;
-use Beestreams\LaravelImageable\Traits\Imageable;
-use Beestreams\LaravelImageable\Helpers\ImageResizer;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Beestreams\LaravelImageable\Jobs\ResizeImage;
 
 class IntegrationTest extends TestCase
 {
@@ -21,14 +15,22 @@ class IntegrationTest extends TestCase
         parent::setUp();
     }
 
-    public function test_a_user_can_create_a_new_team ()
+    public function test_if_a_user_can_create_a_new_team ()
     {
-        
+        $user = fsltCreateUser();
+        $this->be($user);
+        $response = $this->post('/teams', ['name' => 'Sally']);
+        $this->assertDatabaseHas('teams', ['name' => 'Sally', 'owner_id' => $user->id]);
+        $this->assertDatabaseHas('team_user', ['user_id' => $user->id]);
     }
 
-    /** @test */
-    public function a_user_can_be_added_to_a_team ()
+    public function test_if_a_user_can_be_invited_to_a_team ()
     {
+        $user = fsltCreateUserWithTeam();
+    }
 
+    public function test_if_a_user_can_belong_to_multiple_teams ()
+    {
+        
     }
 }

@@ -2,9 +2,10 @@
 
 namespace FullyStudios\LaravelTeams\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Team;
+use Auth;
+use FullyStudios\LaravelTeams\Team;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class TeamController extends Controller
 {
@@ -15,7 +16,8 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+        $teams = Team::all();
+        return view('laravelteams::teams.index', compact('teams'));
     }
 
     /**
@@ -25,7 +27,7 @@ class TeamController extends Controller
      */
     public function create()
     {
-        //
+        return view('laravelteams::teams.create');
     }
 
     /**
@@ -36,7 +38,15 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->request->add(['owner_id' => Auth::user()->id]);
+
+        $team = new Team();
+        $team->fill($request->all());
+        $team->save();
+
+        Auth::user()->teams()->attach($team->id);
+        
+        return redirect()->route('teams.index');
     }
 
     /**

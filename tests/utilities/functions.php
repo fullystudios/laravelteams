@@ -20,6 +20,7 @@ if (!function_exists('fsltCreateUser')) {
         $user = new User();
         $user->fill($properties);
         $user->save();
+        
         return $user;
     }
 
