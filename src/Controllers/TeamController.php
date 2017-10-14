@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace FullyStudios\LaravelTeams\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Team;
 use Illuminate\Http\Request;
 
