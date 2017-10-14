@@ -16,5 +16,8 @@ This package assumes that you have not heavily modified laravels basic Auth scaf
 ### Installation
 Package should be available on packagist shortly
 
+### Testing
+Run `../../../vendor/bin/phpunit` from project root.
+
 ### Gotchas
 None reported yet.
