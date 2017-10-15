@@ -8,11 +8,17 @@
             "email": "mikael.bistrom@fullystudios.se"
         }
     ],
-    "require": {},
+    "require": {
+        "nesbot/carbon": "^1.22"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "~1.4"
+    },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
         },
         "files": ["tests/utilities/functions.php"]
-    }
+    },
+    "prefer-stable": true
 }
