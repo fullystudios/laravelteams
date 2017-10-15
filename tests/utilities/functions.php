@@ -1,13 +1,17 @@
 <?php
 
 use App\User;
+use FullyStudios\LaravelTeams\Team;
+
+
+
+
 
 if (!function_exists('fsltCreateUser')) {
     function fsltCreateUser($vars = [])
     {
         $password = 'secret';
         $name = 'Tester Person '.rand(10000, 99999);
-        $email = 
         $defaults = [
             'name' => $name,
             'password' => $password,
@@ -20,8 +24,23 @@ if (!function_exists('fsltCreateUser')) {
         $user = new User();
         $user->fill($properties);
         $user->save();
-        
+
         return $user;
     }
+}
 
+if (!function_exists('fsltCreateTeam')) {
+    function fsltCreateTeam($vars = [])
+    {
+        $defaults = [
+            'name' => 'Team '.rand(10000, 99999),
+            'owner_id' => 1
+        ];
+        $properties = array_merge($defaults, $vars);
+        $team = new Team();
+        $team->fill($properties);
+        $team->save();
+        
+        return $team;
+    }
 }

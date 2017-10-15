@@ -7,5 +7,6 @@ Route::group(['namespace' => 'FullyStudios\LaravelTeams\Controllers', 'middlewar
     Route::post('/teams', 'TeamController@store')->name('teams.store');
     Route::delete('/teams/{product}', 'TeamController@destroy')->name('teams.delete');
 
+    Route::post('/invite/{team}', 'InviteController@store')->name('invite.store');
 
 });
