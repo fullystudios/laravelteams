@@ -14,10 +14,14 @@
     "require-dev": {
         "fzaninotto/faker": "~1.4"
     },
+    "autoload": {
+        "psr-4": {
+            "FullyStudios\\LaravelTeams\\": "src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "FullyStudios\\LaravelTeams\\": "src/"
-
         },
         "files": ["tests/utilities/functions.php"]
     },
