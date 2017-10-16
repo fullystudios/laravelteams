@@ -1,6 +1,6 @@
 <?php
 
-namespace FullyStudios\LaravelTeams;
+namespace FullyStudios\LaravelTeams\Models;
 
 use App\User;
 use Carbon\Carbon;
