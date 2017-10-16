@@ -4,7 +4,7 @@ namespace FullyStudios\LaravelTeams\Models;
 
 use App\User;
 use Carbon\Carbon;
-use FullyStudios\LaravelTeams\Team;
+use FullyStudios\LaravelTeams\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 
 class TeamInvite extends Model

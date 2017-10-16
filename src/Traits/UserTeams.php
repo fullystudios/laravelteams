@@ -2,8 +2,8 @@
 
 namespace FullyStudios\LaravelTeams\Traits;
 
-use FullyStudios\LaravelTeams\Team;
-use FullyStudios\LaravelTeams\TeamInvite;
+use FullyStudios\LaravelTeams\Models\Team;
+use FullyStudios\LaravelTeams\Models\TeamInvite;
 
 trait UserTeams
 {
