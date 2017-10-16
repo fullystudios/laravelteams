@@ -1,7 +1,7 @@
 <?php
 
 use App\User;
-use FullyStudios\LaravelTeams\Team;
+use FullyStudios\LaravelTeams\Models\Team;
 
 
 
