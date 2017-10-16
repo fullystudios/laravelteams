@@ -16,7 +16,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "FullyStudios\\LaravelTeams\\": "src/"
+
         },
         "files": ["tests/utilities/functions.php"]
     },
