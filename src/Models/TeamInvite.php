@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class TeamInvite extends Model
 {
     protected $fillable = ['user_id', 'team_id', 'accepted'];
-    protected $dates = ['accepted'];
+    protected $dates = ['accepted_at'];
 
     public function user()
     {
@@ -24,7 +24,7 @@ class TeamInvite extends Model
 
     public function accept()
     {
-        $this->accepted = Carbon::now();
+        $this->accepted_at = Carbon::now();
         $this->save();
 
         $this->user->addToTeam($this->team);

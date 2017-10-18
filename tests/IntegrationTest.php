@@ -25,7 +25,7 @@ class IntegrationTest extends TestCase
         $this->assertDatabaseHas('team_invites', [
             'team_id' => $team->id,
             'user_id' => $user->id,
-            'accepted' => null
+            'accepted_at' => null
         ]);
     }
 

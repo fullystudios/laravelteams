@@ -17,7 +17,7 @@ class CreateTeamInvitesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
             $table->integer('team_id')->unsigned()->nullable();
-            $table->date('accepted')->nullable();
+            $table->date('accepted_at')->nullable();
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users');
