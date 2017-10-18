@@ -2,7 +2,6 @@
 
 namespace FullyStudios\LaravelTeams\Models;
 
-use App\User;
 use Carbon\Carbon;
 use FullyStudios\LaravelTeams\Models\Team;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +13,7 @@ class TeamInvite extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(config()->get('auth.providers.users.model'), 'user_id');
     }
 
     public function team()

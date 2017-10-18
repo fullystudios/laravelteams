@@ -10,7 +10,7 @@ class Team extends Model
 
     public function owner()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(config()->get('auth.providers.users.model'), 'owner_id');
     }
 
     // Path helper for model
