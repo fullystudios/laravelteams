@@ -36,4 +36,15 @@ class TeamInvite extends Model
     {
         return route("teams.{$name}", [$this]);
     }
+
+    // Scopes
+    public function scopeAccepted($query)
+    {
+        return $query->whereNotNull('accepted_at');
+    }
+
+    public function pending($query)
+    {
+        return $query->whereNull('accepted_at');
+    }
 }

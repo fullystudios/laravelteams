@@ -2,6 +2,7 @@
 
 use App\User;
 use FullyStudios\LaravelTeams\Models\Team;
+use FullyStudios\LaravelTeams\Models\TeamInvite;
 
 
 
@@ -42,5 +43,22 @@ if (!function_exists('fsltCreateTeam')) {
         $team->save();
         
         return $team;
+    }
+}
+
+
+if (!function_exists('fsltCreateTeamInvite')) {
+    function fsltCreateTeamInvite($vars = [])
+    {
+        $defaults = [
+            'team_id' => 1,
+            'user_id' => 1
+        ];
+        $properties = array_merge($defaults, $vars);
+        $teamInvite = new TeamInvite();
+        $teamInvite->fill($properties);
+        $teamInvite->save();
+        
+        return $teamInvite;
     }
 }

@@ -19,6 +19,9 @@ class TeamServiceProvider extends ServiceProvider
         $this->publishes([
            __DIR__.'/Views' => resource_path('views/vendor/laravelteams'),
        ]);
+        $this->publishes([
+           __DIR__.'/Migrations' => database_path('migrations'),
+       ]);
 
 
     }
