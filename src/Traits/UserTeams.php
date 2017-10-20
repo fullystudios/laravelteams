@@ -11,12 +11,18 @@ trait UserTeams
     // If image is not the original image, get the original
     public function ownedTeams()
     {
-        return $this->teams->where('owner_id', $this->id)->get();
+        return $this->hasMany(Team::class, 'owner_id');
     }
 
-    public function teams()
+    public function memberTeams()
     {
         return $this->belongsToMany(Team::class);
+    }
+
+    public function getAllTeamsAttribute()
+    {
+        $this->load('ownedTeams', 'memberTeams');
+        return $this->ownedTeams->merge($this->memberTeams);
     }
 
     public function invite($team)
@@ -48,7 +54,7 @@ trait UserTeams
         if ($team instanceof Team) {
             $team = $team->id;
         }
-        $this->teams()->attach($team);
+        $this->memberTeams()->attach($team);
     }
     
     public function removeFromTeam($team)
@@ -56,6 +62,6 @@ trait UserTeams
         if ($team instanceof Team) {
             $team = $team->id;
         }
-        $this->teams()->detach($team);
+        $this->memberTeams()->detach($team);
     }
 }

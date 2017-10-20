@@ -29,18 +29,6 @@ class IntegrationTest extends TestCase
         ]);
     }
 
-    public function test_if_a_user_is_added_to_team_when_accepting_invite ()
-    {
-        $user = fsltCreateUser();
-        $team = fsltCreateTeam();
-        $user->inviteToTeam($team);
-        $user->invite($team)->accept();
-        $this->assertDatabaseHas('team_user', [
-            'user_id' => $user->id,
-            'team_id' => $team->id,
-        ]);
-    }
-
     public function test_if_a_user_can_belong_to_multiple_teams ()
     {
         $user = fsltCreateUser();
@@ -48,7 +36,7 @@ class IntegrationTest extends TestCase
         $team2 = fsltCreateTeam();
         $user->addToTeam($team1);
         $user->addToTeam($team2);
-        $this->assertEquals(2, $user->teams->count());
+        $this->assertEquals(2, $user->memberTeams->count());
     }
 
     public function test_if_a_user_can_be_removed_from_a_team ()
@@ -61,6 +49,50 @@ class IntegrationTest extends TestCase
             'user_id' => $user->id,
             'team_id' => $team->id,
         ]);  
+    }
+
+    public function test_if_a_user_can_retrieve_owned_teams ()
+    {
+        $user = fsltCreateUser();
+        $team1 = fsltCreateTeam();
+        $team2 = fsltCreateTeam();
+        $team3 = fsltCreateTeam(['owner_id' => 2]);
+
+        $ownedTeams = $user->ownedTeams;
+        $this->assertTrue($ownedTeams->contains($team1));
+        $this->assertTrue($ownedTeams->contains($team2));
+        $this->assertFalse($ownedTeams->contains($team3));
+    }
+
+    public function test_if_a_user_can_retrieve_teams_where_user_is_member ()
+    {
+        $user = fsltCreateUser();
+        $team1 = fsltCreateTeam(['owner_id' => 2]);
+        $team2 = fsltCreateTeam(['owner_id' => 2]);
+        $team3 = fsltCreateTeam(['owner_id' => 2]);
+        $user->addToTeam($team1);
+        $user->addToTeam($team2);
+        $memberTeams = $user->memberTeams;
+        $this->assertTrue($memberTeams->contains($team1));
+        $this->assertTrue($memberTeams->contains($team2));
+        $this->assertFalse($memberTeams->contains($team3));
+    }
+
+    public function test_if_a_user_can_retrieve_all_teams_where_user_is_member_or_owner ()
+    {
+        $user = fsltCreateUser();
+        $notUserId = $user->id +1;
+        $team1 = fsltCreateTeam(['owner_id' => $notUserId]);
+        $team2 = fsltCreateTeam(['owner_id' => $notUserId]);
+        $team3 = fsltCreateTeam(['owner_id' => $user->id]);
+        $team4 = fsltCreateTeam(['owner_id' => $notUserId]);
+        $user->addToTeam($team1);
+        $user->addToTeam($team2);
+        $memberTeams = $user->allTeams;
+        $this->assertTrue($memberTeams->contains($team1));
+        $this->assertTrue($memberTeams->contains($team2));
+        $this->assertTrue($memberTeams->contains($team3));
+        $this->assertFalse($memberTeams->contains($team4));
     }
 
 }
