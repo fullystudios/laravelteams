@@ -26,15 +26,7 @@ trait UserTeams
             ->withTimeStamps();
     }
 
-    public function pendingTeams()
-    {
-        $userModel = config()->get('auth.providers.users.model');
-
-        return $this->belongsToMany(Team::class, 'team_invites', 'user_id', 'team_id')
-            ->as('invite')
-            ->whereNull('accepted_at')
-            ->withTimeStamps();
-    }
+    
 
     public function getAllTeamsAttribute()
     {
@@ -42,17 +34,24 @@ trait UserTeams
         return $this->ownedTeams->merge($this->memberTeams);
     }
 
+    // Get specific invite
     public function invite($team)
     {
         if ($team instanceof Team) {
             $team = $team->id;
         }
-        // if (is_string($team)) {
-        //     $team = Team::find($team);
-        // }
-        // $this->teams()->save($team);
         $team = $this->teams->where('id', $team)->first();
         return $team->invite;
+    }
+
+    // Get all teams that has not been accepted
+    public function invites()
+    {
+        $userModel = config()->get('auth.providers.users.model');
+        return $this->belongsToMany(Team::class, 'team_invites', 'user_id', 'team_id')
+            ->as('invite')
+            ->whereNull('accepted_at')
+            ->withTimeStamps();
     }
 
     public function inviteToTeam($team)
