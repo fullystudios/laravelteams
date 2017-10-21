@@ -1,10 +1,11 @@
 <?php
-use Tests\TestCase;
+use Carbon\Carbon;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class UnitTest extends TestCase
 {
@@ -15,18 +16,6 @@ class UnitTest extends TestCase
         //  ../../../vendor/bin/phpunit
         require './vendor/autoload.php';
         parent::setUp();
-    }
-
-    public function test_if_a_user_can_be_invited_to_a_team ()
-    {
-        $user = fsltCreateUser();
-        $team = fsltCreateTeam(['owner_id' => $user->id]);
-        $user->inviteToTeam($team->id);
-        $this->assertDatabaseHas('team_invites', [
-            'team_id' => $team->id,
-            'user_id' => $user->id,
-            'accepted_at' => null
-        ]);
     }
 
     public function test_if_a_user_is_added_to_team_when_accepting_invite ()
@@ -41,26 +30,16 @@ class UnitTest extends TestCase
         ]);
     }
 
-    public function test_if_a_user_can_belong_to_multiple_teams ()
+    public function test_if_team_invites_are_accepted ()
     {
-        $user = fsltCreateUser();
-        $team1 = fsltCreateTeam();
-        $team2 = fsltCreateTeam();
-        $user->addToTeam($team1);
-        $user->addToTeam($team2);
-        $this->assertEquals(2, $user->teams->count());
+        $acceptedInviteA = fsltCreateTeamInvite();
+        $acceptedInviteB = fsltCreateTeamInvite(['accepted_at' => Carbon::parse('-1 day')]);
+        $pendingInviteB = fsltCreateTeamInvite();
     }
 
-    public function test_if_a_user_can_be_removed_from_a_team ()
+    public function test_if_team_invites_are_pending ()
     {
-        $user = fsltCreateUser();
-        $team = fsltCreateTeam();
-        $user->addToTeam($team);
-        $user->removeFromTeam($team);
-        $this->assertDatabaseMissing('team_user', [
-            'user_id' => $user->id,
-            'team_id' => $team->id,
-        ]);  
+        
     }
 
 }
