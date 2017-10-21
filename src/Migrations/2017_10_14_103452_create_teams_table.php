@@ -21,14 +21,6 @@ class CreateTeamsTable extends Migration
             
             $table->foreign('owner_id')->references('id')->on('users');
         });
-
-        Schema::create('team_user', function (Blueprint $table) {
-            $table->integer('team_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-
-            $table->foreign('team_id')->references('id')->on('teams');
-            $table->foreign('user_id')->references('id')->on('users');
-        });
     }
 
     /**
@@ -39,6 +31,5 @@ class CreateTeamsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('teams');
-        Schema::dropIfExists('team_user');
     }
 }
