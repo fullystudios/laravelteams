@@ -11,8 +11,10 @@ class Team extends Model
 
     public static function boot () {
         static::created(function($team) {
-            $team->owner_id = \Auth::id();
-            \Auth::user()->addToTeam($team);
+            if (\Auth::check()) {
+                $team->owner_id = \Auth::id();
+                \Auth::user()->addToTeam($team);
+            }
         });
     }
 

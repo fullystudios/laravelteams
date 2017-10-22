@@ -25,13 +25,20 @@ trait UserTeams
             ->whereNotNull('accepted_at')
             ->withTimeStamps();
     }
+    public function pendingTeams()
+    {
+        $userModel = config()->get('auth.providers.users.model');
 
-    
+        return $this->belongsToMany(Team::class, 'team_invites', 'user_id', 'team_id')
+            ->as('invite')
+            ->whereNull('accepted_at')
+            ->withTimeStamps();
+    }
 
     public function getAllTeamsAttribute()
     {
-        $this->load('ownedTeams', 'memberTeams');
-        return $this->ownedTeams->merge($this->memberTeams);
+        $this->load('teams', 'pendingTeams');
+        return $this->teams->merge($this->pendingTeams);
     }
 
     // Get specific invite
@@ -40,7 +47,7 @@ trait UserTeams
         if ($team instanceof Team) {
             $team = $team->id;
         }
-        $team = $this->teams->where('id', $team)->first();
+        $team = $this->allTeams->where('id', $team)->first();
         return $team->invite;
     }
 

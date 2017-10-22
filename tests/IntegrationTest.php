@@ -1,10 +1,11 @@
 <?php
-use Tests\TestCase;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
+use FullyStudios\LaravelTeams\Models\Team;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class IntegrationTest extends TestCase
 {
@@ -91,6 +92,17 @@ class IntegrationTest extends TestCase
         $this->assertFalse($ownedTeams->contains($team1));
         $this->assertTrue($ownedTeams->contains($team2));
         $this->assertTrue($ownedTeams->contains($team3));
+    }
+
+    public function test_if_a_user_can_get_a_specific_team_invite ()
+    {
+        $userA = fsltCreateUser();
+        $userB = fsltCreateUser();
+
+        $this->be($userA);
+        $team = fsltCreateTeam();
+        $team->invite($userB);
+        $this->assertTrue($userB->invite($team) instanceof Team);
     }
 
 
