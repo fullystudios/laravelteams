@@ -1,11 +1,11 @@
 <?php
+use Tests\TestCase;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
-use FullyStudios\LaravelTeams\Models\Team;
 use Illuminate\Database\Eloquent\Model;
+use FullyStudios\LaravelTeams\Models\Team;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCase;
 
 class IntegrationTest extends TestCase
 {
@@ -102,7 +102,9 @@ class IntegrationTest extends TestCase
         $this->be($userA);
         $team = fsltCreateTeam();
         $team->invite($userB);
-        $this->assertTrue($userB->invite($team) instanceof Team);
+        $invite = $userB->invite($team);
+        $this->assertEquals($invite->user_id, $userB->id);
+        $this->assertEquals($invite->team_id, $team->id);
     }
 
 
