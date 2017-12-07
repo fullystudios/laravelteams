@@ -1,11 +1,7 @@
 <?php
+use App\User;
 use Tests\TestCase;
-use Faker\Factory as FakerFactory;
-use Faker\Generator as FakerGenerator;
-use Illuminate\Database\Eloquent\Model;
-use FullyStudios\LaravelTeams\Models\Team;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class IntegrationTest extends TestCase
 {
@@ -18,7 +14,7 @@ class IntegrationTest extends TestCase
         parent::setUp();
     }
 
-    public function test_if_teams_are_attached_twice_for_invite_and_add ()
+    public function test_if_teams_are_attached_twice_for_invite_and_add()
     {
         $userA = fsltCreateUser();
         $userB = fsltCreateUser();
@@ -31,11 +27,11 @@ class IntegrationTest extends TestCase
         $this->assertDatabaseMissing('team_invites', [
             'user_id' => $userB->id,
             'team_id' => $team->id,
-            'accepted_at' => null 
+            'accepted_at' => null
         ]);
     }
 
-    public function test_if_team_invites_are_pending ()
+    public function test_if_team_invites_are_pending()
     {
         $userA = fsltCreateUser();
         $userB = fsltCreateUser();
@@ -48,13 +44,13 @@ class IntegrationTest extends TestCase
         $this->assertFalse($team->invitedUsers->contains($userA));
     }
 
-    public function test_if_a_user_can_belong_to_multiple_teams ()
+    public function test_if_a_user_can_belong_to_multiple_teams()
     {
         $userA = fsltCreateUser();
         $userB = fsltCreateUser();
-        
+
         $this->be($userA);
-        
+
         $team1 = fsltCreateTeam();
         $team2 = fsltCreateTeam();
 
@@ -64,7 +60,7 @@ class IntegrationTest extends TestCase
         $this->assertTrue($userB->teams->contains($team2));
     }
 
-    public function test_if_a_user_can_be_removed_from_a_team ()
+    public function test_if_a_user_can_be_removed_from_a_team()
     {
         $user = fsltCreateUser();
         $this->be($user);
@@ -77,14 +73,14 @@ class IntegrationTest extends TestCase
         ]);
     }
 
-    public function test_if_a_user_can_retrieve_owned_teams ()
+    public function test_if_a_user_can_retrieve_owned_teams()
     {
         $user = fsltCreateUser();
         $this->be($user);
         $team1 = fsltCreateTeam();
         $team2 = fsltCreateTeam();
         $team3 = fsltCreateTeam();
-        
+
         $team1->owner_id = 2;
         $team1->save();
 
@@ -94,7 +90,7 @@ class IntegrationTest extends TestCase
         $this->assertTrue($ownedTeams->contains($team3));
     }
 
-    public function test_if_a_user_can_get_a_specific_team_invite ()
+    public function test_if_a_user_can_get_a_specific_team_invite()
     {
         $userA = fsltCreateUser();
         $userB = fsltCreateUser();
@@ -107,5 +103,24 @@ class IntegrationTest extends TestCase
         $this->assertEquals($invite->team_id, $team->id);
     }
 
+    /** @test */
+    public function query_for_users_not_in_team()
+    {
+        $teamA = fsltCreateTeam();
+        $teamB = fsltCreateTeam();
 
+        $userA = fsltCreateUser(['name' => 'Owner of team A and B']);
+        $userB = fsltCreateUser(['name' => 'Not in any team']);
+        $userC = fsltCreateUser(['name' => 'In Team A']);
+        $userD = fsltCreateUser(['name' => 'In Team B']);
+        $userE = fsltCreateUser(['name' => 'Invited Team A']);
+        $userF = fsltCreateUser(['name' => 'Invited Team B']);
+
+        $userC->addToTeam($teamA);
+        $userD->addToTeam($teamB);
+        $userE->inviteToTeam($teamA);
+        $userF->inviteToTeam($teamB);
+        $this->assertEquals(4, User::notInTeam($teamA)->count());
+        $this->assertEquals(4, User::notInTeam($teamB)->count());
+    }
 }

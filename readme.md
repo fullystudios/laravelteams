@@ -24,5 +24,5 @@ Run `../../../vendor/bin/phpunit` from project root.
 ### Gotchas
 None reported yet.
 
-### Worklog
-I will abandon http functionality and focus on a nice api for adding teams instead. There are at this time too many things with testing a package that goes wrong to secure proper functionality.
+### Scopes
+I have added a notInTeam($team) scope to the user trait. It is tested, but something seems a bit off. 

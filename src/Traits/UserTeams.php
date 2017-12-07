@@ -4,11 +4,9 @@ namespace FullyStudios\LaravelTeams\Traits;
 
 use Carbon\Carbon;
 use FullyStudios\LaravelTeams\Models\Team;
-use FullyStudios\LaravelTeams\Models\TeamInvite;
 
 trait UserTeams
 {
-    
     // If image is not the original image, get the original
     public function ownedTeams()
     {
@@ -25,6 +23,7 @@ trait UserTeams
             ->whereNotNull('accepted_at')
             ->withTimeStamps();
     }
+
     public function pendingTeams()
     {
         $userModel = config()->get('auth.providers.users.model');
@@ -32,6 +31,24 @@ trait UserTeams
         return $this->belongsToMany(Team::class, 'team_invites', 'user_id', 'team_id')
             ->as('invite')
             ->whereNull('accepted_at')
+            ->withTimeStamps();
+    }
+
+    public function allTeams()
+    {
+        $userModel = config()->get('auth.providers.users.model');
+
+        return $this->belongsToMany(Team::class, 'team_invites', 'user_id', 'team_id')
+            ->as('invite')
+            ->withTimeStamps();
+    }
+
+    public function teamVites()
+    {
+        $userModel = config()->get('auth.providers.users.model');
+
+        return $this->belongsToMany(Team::class, 'team_invites', 'user_id', 'team_id')
+            ->as('invite')
             ->withTimeStamps();
     }
 
@@ -67,7 +84,7 @@ trait UserTeams
             $team = Team::find($team);
         }
         $this->teams()->syncWithoutDetaching([$team->id]);
-        
+
         return $team;
     }
 
@@ -79,12 +96,24 @@ trait UserTeams
         $this->teams()->syncWithoutDetaching([$team->id => ['accepted_at' => Carbon::now()]]);
         return $this;
     }
-    
+
     public function removeFromTeam($team)
     {
         if ($team instanceof Team) {
             $team = $team->id;
         }
         $this->teams()->detach($team);
+    }
+
+    public function scopeNotInTeam($query, $team)
+    {
+        $team_id = $team->id;
+        return $query->where(function ($q) use ($team_id) {
+            $q->whereHas('teamVites', function ($q) use ($team_id) {
+                $q->whereNotIn('team_invites.team_id', [$team_id]);
+            });
+        })->orWhere(function ($q) {
+            $q->whereDoesntHave('teamVites');
+        });
     }
 }
